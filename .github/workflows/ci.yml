@@ -10,7 +10,7 @@ env:
   TAG: ${{ github.sha }}
 
 jobs:
-  build-and-push:
+  ci:
     runs-on: ubuntu-latest
 
     steps:

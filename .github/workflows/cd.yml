@@ -3,13 +3,13 @@ name: cd
 on:
   repository_dispatch:
     types: [cd-trigger]
-    
+
 env:
   DOCKER_IMAGE: panchesco13/banknote-classifier
   TAG: ${{ github.event.client_payload.sha || github.sha }}
 
 jobs:
-  deploy-and-test:
+  cd:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
