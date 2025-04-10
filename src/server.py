@@ -87,7 +87,3 @@ class APIServer:
 if __name__ == "__main__":
     server = APIServer()
     server.run(host="0.0.0.0", port=8080)
-
-# Создаем экземпляр сервера и делаем приложение доступным на уровне модуля
-# server = APIServer()
-# app = server._app
