@@ -1,56 +1,62 @@
-name: Test and Verify CD
+name: cd
 
 on:
   repository_dispatch:
-    types: 
-      - cd
-
+    types: [cd-trigger]
+    
 env:
   DOCKER_IMAGE: panchesco13/banknote-classifier
+  TAG: ${{ github.event.client_payload.sha || github.sha }}
 
 jobs:
-  cd:
+  deploy-and-test:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Pull the latest image
-      run: |
-        docker pull ${DOCKER_IMAGE}:latest
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Start the services using docker compose
-      run: |
-        docker compose up -d
+      - name: Pull containers
+        run: |
+          docker pull ${{ env.DOCKER_IMAGE }}:app-${{ env.TAG }}
+          docker pull ${{ env.DOCKER_IMAGE }}:vault-${{ env.TAG }}
+          docker pull ${{ env.DOCKER_IMAGE }}:mongodb-${{ env.TAG }}
 
-    - name: Wait for services to start
-      run: |
-        sleep 30  # Даем время на инициализацию сервисов
+      - name: Start containers
+        run: |
+          docker-compose -f docker-compose.test.yml up -d
+        env:
+          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 
-    - name: Check containers
-      run: |
-        docker compose ps
+      - name: Wait for services
+        run: |
+          sleep 30  # Wait for services to start
+          docker-compose -f docker-compose.test.yml ps
 
-    - name: Check logs
-      run: |
-        docker compose logs app
+      - name: Run functional tests
+        run: |
+          docker-compose -f docker-compose.test.yml exec app python -m pytest tests/functional/ -v
 
-    - name: Run functional tests
-      run: |
-        # Устанавливаем зависимости для тестов
-        pip install -r requirements.txt
-        
-        # Запускаем функциональные тесты
-        python -m pytest tests/test_functional.py -v
+      - name: Run integration tests
+        run: |
+          docker-compose -f docker-compose.test.yml exec app python -m pytest tests/integration/ -v
 
-    - name: Cleanup
-      run: |
-        docker compose down
-        docker system prune -f
+      - name: Check test results
+        if: always()
+        run: |
+          docker-compose -f docker-compose.test.yml logs app
+          docker-compose -f docker-compose.test.yml logs vault
+          docker-compose -f docker-compose.test.yml logs mongodb
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker-compose -f docker-compose.test.yml down -v
