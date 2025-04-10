@@ -1,14 +1,12 @@
-version: '3.8'
-
 services:
   app:
     build: 
       context: .
       dockerfile: Dockerfile
-    image: "${DOCKER_IMAGE}:${TAG}"
+    image: "${DOCKER_IMAGE:-panchesco13/banknote-classifier}:${TAG:-latest}"
     container_name: app
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       - VAULT_ADDR=http://vault:8200
       - VAULT_TOKEN=${VAULT_TOKEN}
