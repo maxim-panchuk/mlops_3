@@ -21,13 +21,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull containers
+      - name: Pull container
         run: |
           docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
 
       - name: Start containers
         run: |
-          docker-compose up -d
+            docker compose up -d
         env:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 
