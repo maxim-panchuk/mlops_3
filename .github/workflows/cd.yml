@@ -34,11 +34,6 @@ jobs:
       - name: Wait for services
         run: |
           sleep 30  # Wait for services to start
-          docker compose ps
-
-      - name: Check logs
-        run: |
-          docker compose ps
 
       - name: Run functional tests
         run: |

@@ -4,10 +4,9 @@ from pydantic import BaseModel
 import joblib
 import numpy as np
 import pandas as pd
-from config import Config
-from logger import Logger
-from database.mongodb import MongoDB
-import os
+from src.config import Config
+from src.logger import Logger
+from src.database.mongodb import MongoDB
 
 class InputData(BaseModel):
     variance: float

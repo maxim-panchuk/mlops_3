@@ -1,7 +1,7 @@
 import hvac
 import os
 from typing import Dict, Any
-from logger import Logger
+from src.logger import Logger
 
 class VaultClient:
     def __init__(self, vault_url: str = "http://localhost:8200", token: str = None):
@@ -26,6 +26,14 @@ class VaultClient:
             raise Exception("Failed to authenticate with Vault")
             
         self.logger.info("Successfully authenticated with Vault")
+            
+        self.setup_mongodb_secrets(
+            username=os.getenv("DB_USERNAME"),
+            password=os.getenv("DB_PASSWORD"),
+            db_name=os.getenv("DB_NAME")
+        )
+
+        self.logger.info('Successfully initialized Vault')
         
     def write_secret(self, path: str, data: Dict[str, Any]) -> None:
         """

@@ -1,12 +1,8 @@
-import os
-from typing import Dict, List, Any
 from pymongo import MongoClient
-from dotenv import load_dotenv
-from vault_client import VaultClient
-from logger import Logger
+from src.vault_client import VaultClient
+from src.logger import Logger
 import datetime
-
-# Loading environment variables
+import os
 
 class MongoDB:
     def __init__(self, vault_client: VaultClient = None):
@@ -19,7 +15,7 @@ class MongoDB:
         self.logger = Logger(name="mongodb")
         
         if vault_client is None:
-            vault_client = VaultClient()
+            vault_client = VaultClient(vault_url=os.getenv("VAULT_ADDR"), token=os.getenv("VAULT_TOKEN"))
             
         try:
             # Get MongoDB credentials from Vault
