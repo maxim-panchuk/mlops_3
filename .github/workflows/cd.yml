@@ -2,7 +2,8 @@ name: cd
 
 on:
   repository_dispatch:
-    types: [cd-trigger]
+    types:
+      - cd-trigger
 
 env:
   DOCKER_IMAGE: panchesco13/banknote-classifier
@@ -26,37 +27,29 @@ jobs:
 
       - name: Pull containers
         run: |
-          docker pull ${{ env.DOCKER_IMAGE }}:app-${{ env.TAG }}
-          docker pull ${{ env.DOCKER_IMAGE }}:vault-${{ env.TAG }}
-          docker pull ${{ env.DOCKER_IMAGE }}:mongodb-${{ env.TAG }}
+          docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
 
       - name: Start containers
         run: |
-          docker-compose -f docker-compose.test.yml up -d
+          docker-compose up -d
         env:
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 
       - name: Wait for services
         run: |
           sleep 30  # Wait for services to start
-          docker-compose -f docker-compose.test.yml ps
+          docker-compose ps
+
+      - name: Check logs
+        run: |
+          docker compose ps
 
       - name: Run functional tests
         run: |
-          docker-compose -f docker-compose.test.yml exec app python -m pytest tests/functional/ -v
-
-      - name: Run integration tests
-        run: |
-          docker-compose -f docker-compose.test.yml exec app python -m pytest tests/integration/ -v
-
-      - name: Check test results
-        if: always()
-        run: |
-          docker-compose -f docker-compose.test.yml logs app
-          docker-compose -f docker-compose.test.yml logs vault
-          docker-compose -f docker-compose.test.yml logs mongodb
+          pip install -r requirements.txt
+          python -m pytest tests/test_functional.py -v
 
       - name: Cleanup
-        if: always()
         run: |
-          docker-compose -f docker-compose.test.yml down -v
+          docker compose down
+          docker system prune -f

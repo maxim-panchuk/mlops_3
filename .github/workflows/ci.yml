@@ -34,7 +34,5 @@ jobs:
       - name: Trigger CD pipeline
         uses: peter-evans/repository-dispatch@v2
         with:
-          # Важно: REPO_ACCESS_TOKEN должно иметь право создавать события repository_dispatch
-          # token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: cd-trigger
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
