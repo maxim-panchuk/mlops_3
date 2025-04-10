@@ -1,7 +1,7 @@
 import hvac
 import os
 from typing import Dict, Any
-from src.logger import Logger
+from logger import Logger
 
 class VaultClient:
     def __init__(self, vault_url: str = "http://localhost:8200", token: str = None):

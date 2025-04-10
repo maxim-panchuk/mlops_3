@@ -2,8 +2,8 @@ import os
 from typing import Dict, List, Any
 from pymongo import MongoClient
 from dotenv import load_dotenv
-from src.vault_client import VaultClient
-from src.logger import Logger
+from vault_client import VaultClient
+from logger import Logger
 import datetime
 
 # Loading environment variables

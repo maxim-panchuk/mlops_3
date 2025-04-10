@@ -28,7 +28,6 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          # Подставьте нужную вам логику сборки
           docker compose build
           docker push ${DOCKER_IMAGE}:latest
 
