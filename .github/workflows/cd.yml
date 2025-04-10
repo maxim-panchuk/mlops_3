@@ -7,6 +7,12 @@ on:
 env:
   DOCKER_IMAGE: panchesco13/banknote-classifier
   TAG: ${{ github.event.client_payload.sha || github.sha }}
+  VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  MONGO_ROOT_USERNAME: ${{ secrets.MONGO_ROOT_USERNAME }}
+  MONGO_ROOT_PASSWORD: ${{ secrets.MONGO_ROOT_PASSWORD }}
 
 jobs:
   cd:
@@ -29,7 +35,12 @@ jobs:
         run: |
             docker compose up -d
         env:
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          VAULT_TOKEN: ${{ env.VAULT_TOKEN }}
+          DB_NAME: ${{ env.DB_NAME }}
+          DB_USERNAME: ${{ env.DB_USERNAME }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          MONGO_ROOT_USERNAME: ${{ env.MONGO_ROOT_USERNAME }}
+          MONGO_ROOT_PASSWORD: ${{ env.MONGO_ROOT_PASSWORD }}
 
       - name: Wait for services
         run: |
