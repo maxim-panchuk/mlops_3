@@ -8,7 +8,6 @@ on:
 env:
   DOCKER_IMAGE: panchesco13/banknote-classifier
   TAG: ${{ github.sha }}
-  DOCKER_IMAGE: ${{ secrets.DOCKER_IMAGE }}
   VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
   DB_NAME: ${{ secrets.DB_NAME }}
   DB_USERNAME: ${{ secrets.DB_USERNAME }}
