@@ -23,9 +23,6 @@ services:
       - "8200:8200"
     cap_add:
       - IPC_LOCK
-    volumes:
-      - ./vault/config:/vault/config
-      - ./vault/policies:/vault/policies
     environment:
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
     command: server -dev
@@ -35,9 +32,6 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
-    environment: []
-    volumes:
-      - mongodb_data:/data/db
 
 volumes:
   mongodb_data:
