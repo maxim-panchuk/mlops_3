@@ -1,0 +1,43 @@
+name: Docker Build and Publish
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+env:
+  DOCKER_IMAGE: panchesco13/banknote-classifier
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Verify Docker login
+      run: |
+        docker info
+        docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      run: |
+        docker compose build
+        docker push ${DOCKER_IMAGE}:latest
+
+    - name: Trigger CD workflow
+      run: |
+        curl -X POST \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -d '{"event_type":"cd"}'
