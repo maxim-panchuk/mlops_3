@@ -1,9 +1,5 @@
 name: ci
 
-permissions:
-  contents: write
-  actions: write
-
 on:
   pull_request:
     branches: [ main ]
@@ -38,6 +34,6 @@ jobs:
       - name: Trigger CD pipeline
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           event-type: cd-trigger
           client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
