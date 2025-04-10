@@ -68,7 +68,7 @@ class VaultClient:
         Setup MongoDB secrets in Vault
         
         Args:
-            username: MongoDB username
+            username: mongodb username
             password: MongoDB password
             db_name: MongoDB database name
         """
