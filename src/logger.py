@@ -10,7 +10,7 @@ class Logger:
         level: int = logging.INFO
     ):
         """
-        Initialize logger with console and file handlers
+        Initializ logger with console and file handlers
         
         Args:
             name: Logger name
