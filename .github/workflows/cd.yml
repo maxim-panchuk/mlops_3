@@ -2,8 +2,7 @@ name: cd
 
 on:
   repository_dispatch:
-    types:
-      - cd-trigger
+    types: [cd-trigger]
 
 env:
   DOCKER_IMAGE: panchesco13/banknote-classifier

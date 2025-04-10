@@ -36,7 +36,7 @@ jobs:
           docker push ${DOCKER_IMAGE}:${{ github.sha }}
 
       - name: Trigger CD pipeline
-        uses: peter-evans/repository-dispatch@v2
+        uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           event-type: cd-trigger
