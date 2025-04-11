@@ -153,3 +153,57 @@ python tests/test_functional.py
 - Все API-запросы валидируются
 - Используются переменные окружения для конфигурации
 - Реализована базовая обработка ошибок
+
+## Настройка GitHub Secrets
+
+Для работы CI/CD пайплайна необходимо настроить следующие секреты в GitHub:
+
+1. Перейдите в Settings -> Secrets and variables -> Actions
+2. Добавьте следующие секреты:
+   - `VAULT_TOKEN`: Токен для доступа к Vault
+   - `DOCKERHUB_USERNAME`: Имя пользователя DockerHub
+   - `DOCKERHUB_TOKEN`: Токен доступа к DockerHub
+
+### Генерация токена Vault
+
+1. Сгенерируйте токен:
+```bash
+python scripts/generate_vault_token.py
+```
+
+2. Скопируйте содержимое файла `vault/secrets/vault_token.txt`
+
+3. Добавьте его как секрет `VAULT_TOKEN` в GitHub
+
+### Настройка DockerHub
+
+1. Создайте токен доступа в DockerHub:
+   - Перейдите в Account Settings -> Security
+   - Нажмите "New Access Token"
+   - Выберите необходимые разрешения (read, write)
+
+2. Добавьте токен как секрет `DOCKERHUB_TOKEN` в GitHub
+
+## Развертывание в продакшн
+
+### Подготовка секретов
+
+1. Убедитесь, что все секреты настроены в GitHub
+
+2. При пуше в ветку `main` автоматически запустится пайплайн:
+   - Сборка Docker-образа
+   - Запуск тестов
+   - Инициализация Vault
+   - Развертывание в продакшн
+
+### Безопасность
+
+- Токен Vault хранится в GitHub Secrets
+- Секреты MongoDB хранятся в Vault
+- Все контейнеры имеют доступ к секретам через переменные окружения
+
+### Мониторинг
+
+- Vault доступен по адресу: http://localhost:8200
+- MongoDB доступен по адресу: mongodb://localhost:27017
+- API доступен по адресу: http://localhost:8080

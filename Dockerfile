@@ -17,7 +17,7 @@ COPY . .
 RUN mkdir -p logs
 
 # Expose port
-EXPOSE 8080
+EXPOSE 8081
 
 # Command to run the application
 CMD ["python", "-m", "src.server"]

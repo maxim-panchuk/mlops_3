@@ -20,7 +20,7 @@ def test_api_functionality():
         response = requests.post(api_url, json=case["input"])
         
         # Check response status
-        assert response.status_code == 200, f"API returned status code {response.status_code}"
+        assert response.status_code == 200, f"API return status code {response.status_code}"
         
         # Get prediction result
         result = response.json()
