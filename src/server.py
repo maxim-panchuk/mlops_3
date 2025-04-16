@@ -7,7 +7,6 @@ import pandas as pd
 from src.config import Config
 from src.logger import Logger
 from src.database.mongodb import MongoDB
-import os
 
 class InputData(BaseModel):
     variance: float
@@ -80,10 +79,10 @@ class APIServer:
 
         return app
 
-    def run(self, host: str = "0.0.0.0", port: int = 8080):
+    def run(self, host: str = "0.0.0.0", port: int = 8081):
         self.logger.info("Starting API server")
         uvicorn.run(self.app, host=host, port=port)
 
 if __name__ == "__main__":
     server = APIServer()
-    server.run(host="0.0.0.0", port=8080)
+    server.run(host="0.0.0.0", port=8081)

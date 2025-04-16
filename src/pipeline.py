@@ -3,7 +3,6 @@ from src.train import ModelTrainer
 from src.utils import ModelEvaluator
 from src.config import Config
 from src.logger import Logger
-import pandas as pd
 from typing import Dict, Any
 
 class Pipeline:

@@ -67,5 +67,5 @@ class ModelTrainer:
             joblib.dump(self.model, model_path)
             logger.info("Model saved successfully")
         except Exception as e:
-            logger.error(f"Error saving model: {str(e)}")
+            logger.error(f"Erro saving model: {str(e)}")
             raise
