@@ -23,7 +23,7 @@ class VaultClient:
         self.client = hvac.Client(url=vault_url, token=token)
         
         if not self.client.is_authenticated():
-            raise Exception("Failed to authenticate with Vault")
+            raise ExceptionGroup("Failed to authenticate with Vault")
             
         self.logger.info("Successfully authenticated with Vault")
             
@@ -49,7 +49,7 @@ class VaultClient:
                 secret=data
             )
             self.logger.info(f"Successfully wrote secret to {path}")
-        except Exception as e:
+        except ExceptionGroup as e:
             self.logger.error(f"Failed to write secret: {str(e)}")
             raise
             
